@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.UserDao">
+    <select id="findByUsername" parameterType="string" resultType="com.itheima.pojo.User">
+        select * from t_user where username = #{username}
+    </select>
+
+    <!--根据条件进行查询-->
+    <select id="findByCondition" parameterType="string" resultType="com.itheima.pojo.User">
+        select * from t_user
+        <if test="value != null and value != '' and value.length > 0">
+            where username like concat('%',#{value},'%')
+        </if>
+    </select>
+
+    <!--插入用户数据数据-->
+    <insert id="add" parameterType="com.itheima.pojo.User">
+        <!--通过mybatis框架提供的selectKey标签获得自增产生的ID值-->
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_user(username,gender,birthday,telephone,remark,station,password)
+        values
+        (#{username},#{gender},#{birthday},#{telephone},#{remark},#{station},#{password})
+    </insert>
+</mapper>
